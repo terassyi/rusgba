@@ -1,2 +1,16 @@
 # Rusgba
+[![test](https://github.com/terassyi/rusgba/actions/workflows/ci.yml/badge.svg)](https://github.com/terassyi/rusgba/actions/workflows/ci.yml)
 Rusgba is the Game boy Advance emulator implemented by Rust and WebAssembly
+
+## Run
+
+### docker
+```shell
+$ cd docker
+$ make run
+```
+
+### app
+```shell
+$ make run # in container
+```
