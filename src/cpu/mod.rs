@@ -1,13 +1,16 @@
 mod arm;
-mod register;
 mod thumb;
+mod register;
+mod bus;
 
 use super::error::{GBAError, GBAResult};
 use register::*;
+use bus::*;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Cpu {
     register: Registers,
+    bus: CpuBus,
 }
 
 #[derive(Debug)]

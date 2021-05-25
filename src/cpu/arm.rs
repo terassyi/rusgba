@@ -1,4 +1,7 @@
 use crate::error::{GBAError, GBAResult};
+use crate::util::*;
+use super::register::*;
+use super::bus::Bus;
 
 const OPCODE_ALU: u32 = 0b0000_0000_0000_0000_0000_0000_0000_0000;
 const OPCODE_SWI: u32 = 0b0000_1111_0000_0000_0000_0000_0000_0000; // 27-26 bits == 00
@@ -36,7 +39,7 @@ const OPCODE_STM_MASK: u32 = 0b0000_1110_0001_0000_0000_0000_0000_0000;
 const OPCODE_MRS_MASK: u32 = 0b0000_1111_1011_1111_0000_1111_1111_1111;
 const OPCODE_MSR_MASK: u32 = 0b0000_1101_1011_0000_1111_0000_0000_0000;
 
-type InstructionFn = fn(inst: u32) -> GBAResult<u32>;
+type InstructionFn<R: Register, B: Bus> = fn(inst: u32, reg: R, bus: B) -> GBAResult<u32>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Instruction {
@@ -100,7 +103,7 @@ impl Instruction {
         }
     }
 
-    pub fn function(&self) -> InstructionFn {
+    pub fn function<R: Register, B: Bus>(&self) -> InstructionFn<R, B> {
         match *self {
             Instruction::SWI => swi,
             Instruction::B => b,
@@ -123,209 +126,276 @@ impl Instruction {
     }
 }
 
-pub fn swi(inst: u32) -> GBAResult<u32> {
+pub fn swi<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn b(inst: u32) -> GBAResult<u32> {
+pub fn b<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
-pub fn bl(inst: u32) -> GBAResult<u32> {
-    Ok(0)
-}
-
-pub fn bx(inst: u32) -> GBAResult<u32> {
+pub fn bl<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn alu(inst: u32) -> GBAResult<u32> {
+pub fn bx<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
+    Ok(0)
+}
+
+pub fn alu<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     if is_and(inst) {
-        and(inst)
+        and(inst, reg, bus)
     } else if is_eor(inst) {
-        eor(inst)
+        eor(inst, reg, bus)
     } else if is_sub(inst) {
-        sub(inst)
+        sub(inst, reg, bus)
     } else if is_rsb(inst) {
-        rsb(inst)
+        rsb(inst, reg, bus)
     } else if is_add(inst) {
-        add(inst)
+        add(inst, reg, bus)
     } else if is_adc(inst) {
-        adc(inst)
+        adc(inst, reg, bus)
     } else if is_sbc(inst) {
-        sbc(inst)
+        sbc(inst, reg, bus)
     } else if is_rsc(inst) {
-        rsc(inst)
+        rsc(inst, reg, bus)
     } else if is_tst(inst) {
-        tst(inst)
+        tst(inst, reg, bus)
     } else if is_teq(inst) {
-        teq(inst)
+        teq(inst, reg, bus)
     } else if is_cmp(inst) {
-        cmp(inst)
+        cmp(inst, reg, bus)
     } else if is_cmn(inst) {
-        cmn(inst)
+        cmn(inst, reg, bus)
     } else if is_orr(inst) {
-        orr(inst)
+        orr(inst, reg, bus)
     } else if is_mov(inst) {
-        mov(inst)
+        mov(inst, reg, bus)
     } else if is_bic(inst) {
-        bic(inst)
+        bic(inst, reg, bus)
     } else if is_mvn(inst) {
-        mvn(inst)
+        mvn(inst, reg, bus)
     } else {
         Err(GBAError::NotFound)
     }
 }
 
 // aru function
-pub fn and(inst: u32) -> GBAResult<u32> {
+pub fn and<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn eor(inst: u32) -> GBAResult<u32> {
+pub fn eor<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn sub(inst: u32) -> GBAResult<u32> {
+pub fn sub<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn rsb(inst: u32) -> GBAResult<u32> {
+pub fn rsb<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn add(inst: u32) -> GBAResult<u32> {
+pub fn add<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn adc(inst: u32) -> GBAResult<u32> {
+pub fn adc<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn sbc(inst: u32) -> GBAResult<u32> {
+pub fn sbc<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn rsc(inst: u32) -> GBAResult<u32> {
+pub fn rsc<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn tst(inst: u32) -> GBAResult<u32> {
+pub fn tst<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn teq(inst: u32) -> GBAResult<u32> {
+pub fn teq<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn cmp(inst: u32) -> GBAResult<u32> {
+pub fn cmp<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn cmn(inst: u32) -> GBAResult<u32> {
+pub fn cmn<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn orr(inst: u32) -> GBAResult<u32> {
+pub fn orr<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mov(inst: u32) -> GBAResult<u32> {
+pub fn mov<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn bic(inst: u32) -> GBAResult<u32> {
+pub fn bic<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mvn(inst: u32) -> GBAResult<u32> {
+pub fn mvn<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn und(inst: u32) -> GBAResult<u32> {
+pub fn und<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0 as u32)
 }
 
-pub fn ldr(inst: u32) -> GBAResult<u32> {
+pub fn ldr<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn store(inst: u32) -> GBAResult<u32> {
+pub fn store<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldrh(inst: u32) -> GBAResult<u32> {
+pub fn ldrh<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldrsb(inst: u32) -> GBAResult<u32> {
+pub fn ldrsb<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldrsh(inst: u32) -> GBAResult<u32> {
+pub fn ldrsh<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn strh(inst: u32) -> GBAResult<u32> {
+pub fn strh<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldm(inst: u32) -> GBAResult<u32> {
+pub fn ldm<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn stm(inst: u32) -> GBAResult<u32> {
+pub fn stm<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn msr(inst: u32) -> GBAResult<u32> {
+pub fn msr<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mrs(inst: u32) -> GBAResult<u32> {
+pub fn mrs<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mpy(inst: u32) -> GBAResult<u32> {
+pub fn mpy<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     if is_mul(inst) {
-        mul(inst)
+        mul(inst, reg, bus)
     } else if is_mla(inst) {
-        mla(inst)
+        mla(inst, reg, bus)
     } else if is_umull(inst) {
-        umull(inst)
+        umull(inst, reg, bus)
     } else if is_umlal(inst) {
-        umlal(inst)
+        umlal(inst, reg, bus)
     } else if is_smull(inst) {
-        smull(inst)
+        smull(inst, reg, bus)
     } else if is_smlal(inst) {
-        smlal(inst)
+        smlal(inst, reg, bus)
     } else {
         Err(GBAError::NotFound)
     }
 }
 
-pub fn mul(inst: u32) -> GBAResult<u32> {
+pub fn mul<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mla(inst: u32) -> GBAResult<u32> {
+pub fn mla<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn umull(inst: u32) -> GBAResult<u32> {
+pub fn umull<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn umlal(inst: u32) -> GBAResult<u32> {
+pub fn umlal<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn smull(inst: u32) -> GBAResult<u32> {
+pub fn smull<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn smlal(inst: u32) -> GBAResult<u32> {
+pub fn smlal<R: Register, B: Bus>(inst: u32, reg: R, bus: B) -> GBAResult<u32> {
     Ok(0)
 }
+
+fn rd(inst: u32) -> usize {
+    // register number for storing the result of compute
+    ((inst >> 12) & 0b1111) as usize
+}
+
+fn rn(inst: u32) -> usize {
+    // register number for first operand
+    ((inst >> 16) & 0b1111) as usize
+}
+
+fn op2<R: Register>(inst: u32, reg: Registers) -> GBAResult<u32> {
+    let is_carry = bit_u32(inst, 20);
+    match is_imm(inst) {
+        true => {
+            // use immediate
+            let nn = inst & 0b1111_1111;
+            let ls = ((inst >> 8) & 0b1111) * 2;
+            // ror
+            Ok(0u32)
+        },
+        false => {
+            // use register
+            let rm = inst & 0b1111;
+            let mut shift_val = 0;
+            let shift_type = (inst >> 5) & 0b11;
+            let mut salt: u32= 0; // TODO: I'm not sure, why this variable is necessary.
+            if bit_u32(inst, 4) {
+                // 11-8 bits is register number that has the shift value.
+                let reg_num = (inst >> 8) & 0b1111;
+                shift_val = reg.gen.get(reg_num as usize)? & 0b1111_1111;
+                if rm == 15u32 {
+                    salt = 4
+                }
+            } else {
+                // 11-7 bits is immediate show the shift value
+                shift_val = (inst >> 7) & 0b1111;
+            }
+            match shift_type {
+                LSL => {},
+                LSR => {},
+                ASR => {},
+                ROR => {},
+                _ => {
+                    let r = reg.gen.get(rm as usize)? + salt;
+                    // Ok(r)
+                }
+            }
+            Ok(0u32)
+        },
+    }
+}
+
+fn ror<R: Register>(val: u32, shift_val: u32, is_carry: bool, imm: bool, reg: Registers) -> u32 {
+    0u32
+
+}
+
+const LSL: u32 = 0;
+const LSR: u32 = 1;
+const ASR: u32 = 2;
+const ROR: u32 = 3;
+
+fn is_imm(inst: u32) -> bool {
+    bit_u32(inst, 25)
+}
+
 
 fn is_swi(inst: u32) -> bool {
     inst & OPCODE_SWI_MASK == OPCODE_SWI
@@ -488,9 +558,11 @@ mod tests {
     use super::Instruction;
     #[test]
     fn test_instfuction_function() {
+        let reg = super::super::register::Registers::new();
+        let bus = super::super::bus::CpuBus::new();
         let inst = Instruction::UND;
         let func = inst.function();
-        assert_eq!(func(0 as u32).unwrap(), 0 as u32);
+        assert_eq!(func(0 as u32, reg.gen, bus).unwrap(), 0 as u32);
     }
     #[test]
     fn test_instfuction_from() {
@@ -502,5 +574,15 @@ mod tests {
     fn test_instfuction_from_err() {
         let invalid_inst = super::OPCODE_MSR | 0b0000_1000_0000_0000_0000_0000_0000_0000;
         assert_eq!(Instruction::from(invalid_inst).is_ok(), false);
+    }
+    #[test]
+    fn test_rd() {
+        let inst = super::OPCODE_ALU | 0b0000_0000_0000_0000_0101_0000_0000_0000;
+        assert_eq!(super::rd(inst), 5usize);
+    }
+    #[test]
+    fn test_rn() {
+        let inst = super::OPCODE_ALU | 0b0000_0000_0000_1100_0101_0000_0000_0000;
+        assert_eq!(super::rn(inst), 12usize);
     }
 }

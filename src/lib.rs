@@ -2,7 +2,7 @@ extern crate web_sys;
 
 mod cpu;
 mod error;
-mod utils;
+mod util;
 
 use wasm_bindgen::prelude::*;
 

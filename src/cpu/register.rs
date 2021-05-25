@@ -1,12 +1,38 @@
+use crate::error::*;
+use crate::util::*;
+
+pub trait Register {
+    fn set(&mut self, num: usize, val: u32) -> GBAResult<()>;
+    fn get(&self, num: usize) -> GBAResult<u32>;
+}
+
+pub const FIQ: usize = 0;
+pub const USR: usize = 1;
+pub const SVC: usize = 2;
+pub const ABT: usize = 3;
+pub const IRQ: usize = 4;
+pub const UND: usize = 5;
+
+pub const CPSR_N: usize = 31;
+pub const CPSR_Z: usize = 30;
+pub const CPSR_C: usize = 29;
+pub const CPSR_V: usize = 28;
+pub const CPSR_Q: usize = 27;
+pub const CPSR_I: usize = 7;
+pub const CPSR_F: usize = 6;
+pub const CPSR_T: usize = 5;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Registers {
-    gen: GeneralRegister,
-    fiq: FIQRegister,
-    usr: UsrRegister,
-    r13_bank: BankRegister,
-    r14_bank: BankRegister,
-    spsr_bank: BankRegister,
-    cpsr: u32,
+    pub gen: GeneralRegister,
+    pub fiq: FIQRegister,
+    pub usr: UsrRegister,
+    pub r13_bank: BankRegister,
+    pub r14_bank: BankRegister,
+    pub spsr_bank: BankRegister,
+    pub cpsr: u32, // 31-> N(sign), 30-> Z(zero), 29-> C(carry), 28-> V(overflow), 27-> Q(sticky(not used))
+                   // 7-> I(IRQ disable), 6-> F(FIQ disable), 5->T(thumb), 4-0-> M4-M0(mode)
+                   // https://github.com/pokemium/gba_doc_ja/blob/main/arm7tdmi/cond.md#cpsr
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -70,6 +96,10 @@ impl Registers {
             cpsr: 0,
         }
     }
+
+    pub fn set_cpsr_flag(&mut self, flag: usize, bit: bool) {
+        self.cpsr = set_bit_u32(self.cpsr, flag, bit)
+    }
 }
 
 impl GeneralRegister {
@@ -95,6 +125,53 @@ impl GeneralRegister {
     }
 }
 
+impl Register for GeneralRegister {
+    fn set(&mut self, num: usize, val: u32) -> GBAResult<()> {
+        match num {
+            0 => self.r0 = val,
+            1 => self.r1 = val,
+            2 => self.r2 = val,
+            3 => self.r3 = val,
+            4 => self.r4 = val,
+            5 => self.r5 = val,
+            6 => self.r6 = val,
+            7 => self.r7 = val,
+            8 => self.r8 = val,
+            9 => self.r9 = val,
+            10 => self.r10 = val,
+            11 => self.r11 = val,
+            12 => self.r12 = val,
+            13 => self.r13 = val,
+            14 => self.r14 = val,
+            15 => self.r15 = val,
+            _ => return Err(GBAError::InvalidData),
+        }
+        Ok(())
+    }
+
+    fn get(&self, num: usize) -> GBAResult<u32> {
+        match num {
+            0 => Ok(self.r0),
+            1 => Ok(self.r1),
+            2 => Ok(self.r2),
+            3 => Ok(self.r3),
+            4 => Ok(self.r4),
+            5 => Ok(self.r5),
+            6 => Ok(self.r6),
+            7 => Ok(self.r7),
+            8 => Ok(self.r8),
+            9 => Ok(self.r9),
+            10 => Ok(self.r10),
+            11 => Ok(self.r11),
+            12 => Ok(self.r12),
+            13 => Ok(self.r13),
+            14 => Ok(self.r14),
+            15 => Ok(self.r15),
+            _ => return Err(GBAError::InvalidData),
+        }
+    }
+}
+
 impl FIQRegister {
     fn new() -> FIQRegister {
         FIQRegister {
@@ -103,6 +180,32 @@ impl FIQRegister {
             r10: 0,
             r11: 0,
             r12: 0,
+        }
+    }
+
+}
+
+impl Register for FIQRegister {
+    fn set(&mut self, num: usize, val: u32) -> GBAResult<()> {
+        match num {
+            8 => self.r8 = val,
+            9 => self.r9 = val,
+            10 => self.r10 = val,
+            11 => self.r11 = val,
+            12 => self.r12 = val,
+            _ => return Err(GBAError::InvalidData),
+        }
+        Ok(())
+    }
+
+    fn get(&self, num: usize) -> GBAResult<u32> {
+        match num {
+            8 => Ok(self.r8),
+            9 => Ok(self.r9),
+            10 => Ok(self.r10),
+            11 => Ok(self.r11),
+            12 => Ok(self.r12),
+            _ => return Err(GBAError::InvalidData),
         }
     }
 }
@@ -117,6 +220,53 @@ impl UsrRegister {
             r12: 0,
         }
     }
+    pub fn set(&mut self, num: usize, val: u32) -> GBAResult<()> {
+        match num {
+            8 => self.r8 = val,
+            9 => self.r9 = val,
+            10 => self.r10 = val,
+            11 => self.r11 = val,
+            12 => self.r12 = val,
+            _ => return Err(GBAError::InvalidData),
+        }
+        Ok(())
+    }
+
+    pub fn get(&self, num: usize) -> GBAResult<u32> {
+        match num {
+            8 => Ok(self.r8),
+            9 => Ok(self.r9),
+            10 => Ok(self.r10),
+            11 => Ok(self.r11),
+            12 => Ok(self.r12),
+            _ => return Err(GBAError::InvalidData),
+        }
+    }
+}
+
+impl Register for UsrRegister {
+    fn set(&mut self, num: usize, val: u32) -> GBAResult<()> {
+        match num {
+            8 => self.r8 = val,
+            9 => self.r9 = val,
+            10 => self.r10 = val,
+            11 => self.r11 = val,
+            12 => self.r12 = val,
+            _ => return Err(GBAError::InvalidData),
+        }
+        Ok(())
+    }
+
+    fn get(&self, num: usize) -> GBAResult<u32> {
+        match num {
+            8 => Ok(self.r8),
+            9 => Ok(self.r9),
+            10 => Ok(self.r10),
+            11 => Ok(self.r11),
+            12 => Ok(self.r12),
+            _ => return Err(GBAError::InvalidData),
+        }
+    }
 }
 
 impl BankRegister {
@@ -129,5 +279,49 @@ impl BankRegister {
             irq: 0,
             und: 0,
         }
+    }
+}
+
+impl Register for BankRegister {
+    fn set(&mut self, num: usize, val: u32) -> GBAResult<()> {
+        match num {
+            0 => self.fiq = val,
+            1 => self.usr = val,
+            2 => self.svc = val,
+            3 => self.abt = val,
+            4 => self.irq = val,
+            5 => self.und = val,
+            _ => return Err(GBAError::InvalidData),
+        }
+        Ok(())
+    }
+
+    fn get(&self, num: usize) -> GBAResult<u32> {
+        match num {
+            0 => Ok(self.fiq),
+            1 => Ok(self.usr),
+            2 => Ok(self.svc),
+            3 => Ok(self.abt),
+            4 => Ok(self.irq),
+            5 => Ok(self.und),
+            _ => return Err(GBAError::InvalidData),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Register;
+    #[test]
+    fn test_general_register_set() {
+        let mut reg = super::GeneralRegister::new();
+        let res = reg.set(0usize, 1u32).is_ok();
+        assert_eq!(res, true);
+    }
+    #[test]
+    fn test_general_register_get() {
+        let mut reg = super::GeneralRegister::new();
+        reg.set(0usize, 1u32).unwrap();
+        assert_eq!(reg.get(0usize).unwrap(), 1u32);
     }
 }
