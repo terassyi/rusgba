@@ -38,6 +38,24 @@ pub fn asr(val: u32, shift_val: usize) -> u32 {
     res
 }
 
+pub fn is_add_carry(val: u64) -> bool {
+    val > 0b1111_1111_1111_1111_1111_1111_1111_1111 as u64
+}
+
+pub fn is_sub_carry(val: u64) -> bool {
+    val < 0b0001_0000_0000_0000_0000_0000_0000_0000_0000 as u64
+}
+
+pub fn is_add_overflow(lhs: u32, rhs: u32, res: u32) -> bool {
+    let v = !(lhs ^ rhs) & (lhs ^ res) & 0x8000_0000;
+    v != 0
+}
+
+pub fn is_sub_overflow(lhs: u32, rhs: u32, res: u32) -> bool {
+    let v = (lhs ^ rhs) & (lhs ^ res) & 0x8000_0000;
+    v > 0
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

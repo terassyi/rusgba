@@ -30,7 +30,7 @@ pub struct Registers {
     pub r13_bank: BankRegister,
     pub r14_bank: BankRegister,
     pub spsr_bank: BankRegister,
-    pub cpsr: u32, // 31-> N(sign), 30-> Z(zero), 29-> C(carry), 28-> V(overflow), 27-> Q(sticky(not used))
+    pub cpsr: CpsrRegister, // 31-> N(sign), 30-> Z(zero), 29-> C(carry), 28-> V(overflow), 27-> Q(sticky(not used))
                    // 7-> I(IRQ disable), 6-> F(FIQ disable), 5->T(thumb), 4-0-> M4-M0(mode)
                    // https://github.com/pokemium/gba_doc_ja/blob/main/arm7tdmi/cond.md#cpsr
 }
@@ -84,6 +84,11 @@ pub struct BankRegister {
     und: u32,
 }
 
+#[derive(Debug, Copy, Clone)]
+pub struct CpsrRegister {
+    inner: u32,
+}
+
 impl Registers {
     pub fn new() -> Registers {
         Registers {
@@ -93,13 +98,10 @@ impl Registers {
             r13_bank: BankRegister::new(),
             r14_bank: BankRegister::new(),
             spsr_bank: BankRegister::new(),
-            cpsr: 0,
+            cpsr: CpsrRegister::new(),
         }
     }
 
-    pub fn set_cpsr_flag(&mut self, flag: usize, bit: bool) {
-        self.cpsr = set_bit_u32(self.cpsr, flag, bit)
-    }
 }
 
 impl GeneralRegister {
@@ -309,6 +311,74 @@ impl Register for BankRegister {
     }
 }
 
+impl CpsrRegister {
+    fn new() -> CpsrRegister {
+        CpsrRegister { inner: 0u32 }
+    }
+
+    pub fn set_flag(&mut self, flag: usize, bit: bool) {
+        self.inner = set_bit_u32(self.inner, flag, bit)
+    }
+
+    fn is_flag_set(&self, flag: usize) -> bool {
+        self.inner & (1 << flag) != 0
+    }
+
+    pub fn carry(&self) -> u32 {
+        if self.is_flag_set(CPSR_C) { 1u32 } else { 0u32 }
+    }
+
+    pub fn zero(&self) -> u32 {
+        if self.is_flag_set(CPSR_Z) { 1u32 } else { 0u32 }
+    }
+
+    pub fn sign(&self) -> u32 {
+        if self.is_flag_set(CPSR_N) { 1u32 } else { 0u32 }
+    }
+
+    pub fn overflow(&self) -> u32 {
+        if self.is_flag_set(CPSR_V) { 1u32 } else { 0u32 }
+    }
+
+    
+    pub fn sticky(&self) -> u32 {
+        if self.is_flag_set(CPSR_Q) { 1u32 } else { 0u32 }
+    }
+}
+impl Register for CpsrRegister {
+    fn get(&self, num: usize) -> GBAResult<u32> {
+        match num {
+            CPSR_N => Ok(self.inner & (1 << CPSR_N)),
+            CPSR_Z => Ok(self.inner & (1 << CPSR_Z)),
+            CPSR_C => Ok(self.inner & (1 << CPSR_C)),
+            CPSR_V => Ok(self.inner & (1 << CPSR_V)),
+            CPSR_Q => Ok(self.inner & (1 << CPSR_Q)),
+            CPSR_I => Ok(self.inner & (1 << CPSR_I)),
+            CPSR_F => Ok(self.inner & (1 << CPSR_F)),
+            CPSR_T => Ok(self.inner & (1 << CPSR_T)),
+            _ => Err(GBAError::InvalidData),
+        }
+    }
+    
+    fn set(&mut self, num: usize, val: u32) -> GBAResult<()> {
+        if val > 1 || val < 0 {
+            return Err(GBAError::InvalidData);
+        }
+        let b = if val == 1 { true } else { false };
+        self.inner = match num {
+            CPSR_N => set_bit_u32(self.inner, CPSR_N, b),
+            CPSR_Z => set_bit_u32(self.inner, CPSR_Z, b),
+            CPSR_C => set_bit_u32(self.inner, CPSR_C, b),
+            CPSR_V => set_bit_u32(self.inner, CPSR_V, b),
+            CPSR_Q => set_bit_u32(self.inner, CPSR_Q, b),
+            CPSR_I => set_bit_u32(self.inner, CPSR_I, b),
+            CPSR_F => set_bit_u32(self.inner, CPSR_F, b),
+            CPSR_T => set_bit_u32(self.inner, CPSR_T, b),
+            _ => return Err(GBAError::InvalidData),
+        };
+        Ok(())
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::Register;
@@ -323,5 +393,18 @@ mod tests {
         let mut reg = super::GeneralRegister::new();
         reg.set(0usize, 1u32).unwrap();
         assert_eq!(reg.get(0usize).unwrap(), 1u32);
+    }
+    #[test]
+    fn test_cpsr_regiter_set() {
+        let mut cpsr = super::CpsrRegister::new();
+        let res = cpsr.set(super::CPSR_N, 1u32).is_ok();
+        assert_eq!(res, true);
+    }
+    #[test]
+    fn test_cpsr_register_get() {
+        let mut cpsr = super::CpsrRegister::new();
+        assert_eq!(cpsr.get(super::CPSR_N).unwrap(), 0u32);
+        cpsr.set(super::CPSR_N, 1u32).unwrap();
+        assert_eq!(cpsr.get(super::CPSR_N).unwrap(), (1u32 << super::CPSR_N));
     }
 }

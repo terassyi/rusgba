@@ -7,10 +7,10 @@ use super::error::{GBAError, GBAResult};
 use register::*;
 use bus::*;
 
-#[derive(Debug, Copy, Clone)]
-pub struct Cpu {
-    register: Registers,
-    bus: CpuBus,
+#[derive(Debug)]
+pub struct Cpu<'a> {
+    register: &'a mut Registers,
+    bus: &'a mut CpuBus,
 }
 
 #[derive(Debug)]
