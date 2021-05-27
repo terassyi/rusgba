@@ -4,6 +4,9 @@ use std::fmt;
 pub enum GBAError {
     NotFound,
     InvalidData,
+
+    // cpu
+    InstructionNotFound,
 }
 
 pub type GBAResult<T> = Result<T, GBAError>;
@@ -14,6 +17,7 @@ impl fmt::Display for GBAError {
         match self {
             NotFound => write!(f, "Not Found."),
             InvalidData => write!(f, "Invalid Data."),
+            InstructionNotFound => write!(f, "Instruction not found."),
         }
     }
 }

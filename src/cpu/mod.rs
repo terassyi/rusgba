@@ -1,5 +1,4 @@
-mod arm;
-mod thumb;
+mod instruction;
 mod register;
 mod bus;
 
@@ -11,6 +10,13 @@ use bus::*;
 pub struct Cpu<'a> {
     register: &'a mut Registers,
     bus: &'a mut CpuBus,
+    debug: bool,
+}
+
+#[derive(Debug)]
+pub struct Instruction {
+    inst: u32,
+    location: u32,
 }
 
 #[derive(Debug)]

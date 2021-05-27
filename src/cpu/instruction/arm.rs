@@ -1,7 +1,7 @@
 use crate::error::{GBAError, GBAResult};
 use crate::util;
-use super::register::*;
-use super::bus::*;
+use crate::cpu::register::*;
+use crate::cpu::bus::*;
 
 const OPCODE_ALU: u32 = 0b0000_0000_0000_0000_0000_0000_0000_0000;
 const OPCODE_SWI: u32 = 0b0000_1111_0000_0000_0000_0000_0000_0000; // 27-26 bits == 00
@@ -636,8 +636,8 @@ mod tests {
     use super::Instruction;
     #[test]
     fn test_instfuction_function() {
-        let mut reg = super::super::register::Registers::new();
-        let mut bus = super::super::bus::CpuBus::new();
+        let mut reg = super::super::super::register::Registers::new();
+        let mut bus = super::super::super::bus::CpuBus::new();
         let inst = Instruction::UND;
         let func = inst.function();
         assert_eq!(func(0 as u32, &mut reg, &mut bus).unwrap(), 0 as u32);
