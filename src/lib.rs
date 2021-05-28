@@ -3,6 +3,9 @@ extern crate web_sys;
 mod cpu;
 mod error;
 mod util;
+mod rom;
+mod ram;
+mod cartridge;
 
 use wasm_bindgen::prelude::*;
 

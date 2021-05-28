@@ -1,3 +1,4 @@
+pub mod num;
 
 pub fn bit_u32(val: u32, index: usize) -> bool {
     val & (1 << index) != 0

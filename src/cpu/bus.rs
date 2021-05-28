@@ -1,22 +1,23 @@
 use crate::error::*;
+use crate::rom::bios::{ BiosRom };
+use crate::ram::work_ram::{ EWRam, IWRam };
+use crate::cartridge::{ GamePak };
 
-pub trait Bus {
-    fn read(&self, addr: u32) -> GBAResult<u32>;
+#[derive(Debug)]
+pub struct Bus<'a> {
+    bios: &'a BiosRom,
+    ewram: &'a mut EWRam,
+    iwram: &'a mut IWRam,
+    gamepak: &'a mut GamePak<'a>,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub struct CpuBus {
-
-}
-
-impl CpuBus {
-    pub fn new() -> CpuBus {
-        CpuBus {}
-    }
-}
-
-impl Bus for CpuBus {
-    fn read(&self, addr: u32) -> GBAResult<u32> {
-        Ok(0u32)
+impl<'a> Bus<'a> {
+    pub fn new(bios: &'a BiosRom, ewram: &'a mut EWRam, iwram: &'a mut IWRam, gamepak: &'a mut GamePak<'a>) -> Bus<'a> {
+        Bus {
+            bios: bios,
+            ewram: ewram,
+            iwram: iwram,
+            gamepak: gamepak,
+        }
     }
 }

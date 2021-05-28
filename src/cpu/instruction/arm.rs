@@ -39,7 +39,7 @@ const OPCODE_STM_MASK: u32 = 0b0000_1110_0001_0000_0000_0000_0000_0000;
 const OPCODE_MRS_MASK: u32 = 0b0000_1111_1011_1111_0000_1111_1111_1111;
 const OPCODE_MSR_MASK: u32 = 0b0000_1101_1011_0000_1111_0000_0000_0000;
 
-type InstructionFn = fn(inst: u32, reg: &mut Registers, bus: & mut CpuBus) -> GBAResult<u32>;
+type InstructionFn = fn(inst: u32, reg: &mut Registers, bus: & mut Bus) -> GBAResult<u32>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Instruction {
@@ -126,22 +126,22 @@ impl Instruction {
     }
 }
 
-pub fn swi(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn swi(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn b(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn b(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
-pub fn bl(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
-    Ok(0)
-}
-
-pub fn bx(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn bl(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn alu(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn bx(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
+    Ok(0)
+}
+
+pub fn alu(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     if is_and(inst) {
         and(inst, reg, bus)
     } else if is_eor(inst) {
@@ -180,115 +180,115 @@ pub fn alu(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
 }
 
 // aru function
-pub fn and(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn and(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn eor(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn eor(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn sub(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn sub(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn rsb(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn rsb(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn add(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn add(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn adc(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn adc(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn sbc(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn sbc(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn rsc(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn rsc(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn tst(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn tst(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn teq(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn teq(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn cmp(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn cmp(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn cmn(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn cmn(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn orr(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn orr(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mov(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn mov(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn bic(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn bic(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mvn(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn mvn(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn und(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn und(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0 as u32)
 }
 
-pub fn ldr(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn ldr(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn store(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn store(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldrh(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn ldrh(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldrsb(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn ldrsb(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldrsh(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn ldrsh(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn strh(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn strh(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn ldm(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn ldm(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn stm(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn stm(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn msr(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn msr(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mrs(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn mrs(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mpy(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn mpy(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     if is_mul(inst) {
         mul(inst, reg, bus)
     } else if is_mla(inst) {
@@ -306,27 +306,27 @@ pub fn mpy(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
     }
 }
 
-pub fn mul(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn mul(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn mla(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn mla(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn umull(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn umull(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn umlal(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn umlal(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn smull(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn smull(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
-pub fn smlal(inst: u32, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u32> {
+pub fn smlal(inst: u32, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u32> {
     Ok(0)
 }
 
@@ -634,10 +634,24 @@ fn is_smlal(inst: u32) -> bool {
 #[cfg(test)]
 mod tests {
     use super::Instruction;
+    use crate::ram::work_ram;
+    use crate::rom::gamepak;
+    use crate::rom::bios;
+    use crate::ram::gamepak as gamepak_ram;
+    use crate::cartridge::*;
     #[test]
     fn test_instfuction_function() {
         let mut reg = super::super::super::register::Registers::new();
-        let mut bus = super::super::super::bus::CpuBus::new();
+        let bios = bios::BiosRom::new();
+        let mut ewram = work_ram::EWRam::new();
+        let mut iwram = work_ram::IWRam::new();
+        let gamepak1 = gamepak::GamePakRom::new();
+        let gamepak2 = gamepak::GamePakRom::new();
+        let gamepak3 = gamepak::GamePakRom::new();
+        let flash = gamepak::FlashRom::new();
+        let mut sram = gamepak_ram::SRam::new();
+        let mut gp = GamePak::new(&gamepak1, &gamepak2, &gamepak3, &flash, &mut sram);
+        let mut bus = super::super::super::bus::Bus::new(&bios, &mut ewram, &mut iwram, &mut gp);
         let inst = Instruction::UND;
         let func = inst.function();
         assert_eq!(func(0 as u32, &mut reg, &mut bus).unwrap(), 0 as u32);

@@ -48,7 +48,7 @@ const OPCODE_B_MASK: u16 = 0b1111_1000_0000_0000;
 const OPCODE_LONG_BR_WITH_LINK_1_MASK: u16 = 0b1111_1000_0000_0000;
 const OPCODE_LONG_BR_WITH_LINK_2_MASK: u16 = 0b1111_1000_0000_0000;
 
-type InstructionFn = fn(inst: u16, reg: &mut Registers, bus: & mut CpuBus) -> GBAResult<u16>;
+type InstructionFn = fn(inst: u16, reg: &mut Registers, bus: & mut Bus) -> GBAResult<u16>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Instruction {
@@ -128,87 +128,87 @@ impl Instruction {
     }
 }
 
-fn shift(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn shift(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn add_sub(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn add_sub(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn mov_cmp_add_sub_imm(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn mov_cmp_add_sub_imm(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn alu(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn alu(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn hi_reg_bx(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn hi_reg_bx(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn load_pc_relative(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn load_pc_relative(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn load_store_with_reg_offset(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn load_store_with_reg_offset(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn load_store_sign_ex_byte_halfword(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn load_store_sign_ex_byte_halfword(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn load_store_with_imm_offset(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn load_store_with_imm_offset(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn load_store_halfword(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn load_store_halfword(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn load_store_sp_relative(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn load_store_sp_relative(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn push_pop_reg(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn push_pop_reg(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn multiple_load_store(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn multiple_load_store(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn get_relative_addr(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn get_relative_addr(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn add_offset_sp(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn add_offset_sp(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn cond_b(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn cond_b(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn swi(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn swi(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn breakpoint(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn breakpoint(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn b(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn b(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn long_branch_with_link_1(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn long_branch_with_link_1(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 
-fn long_branch_with_link_2(inst: u16, reg: &mut Registers, bus: &mut CpuBus) -> GBAResult<u16> {
+fn long_branch_with_link_2(inst: u16, reg: &mut Registers, bus: &mut Bus) -> GBAResult<u16> {
     Ok(0u16)
 }
 

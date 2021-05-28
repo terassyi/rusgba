@@ -2,14 +2,14 @@ mod instruction;
 mod register;
 mod bus;
 
-use super::error::{GBAError, GBAResult};
+use super::error::{ GBAError, GBAResult };
 use register::*;
 use bus::*;
 
 #[derive(Debug)]
 pub struct Cpu<'a> {
-    register: &'a mut Registers,
-    bus: &'a mut CpuBus,
+    register: Registers,
+    bus: Bus<'a>,
     debug: bool,
 }
 
@@ -55,4 +55,14 @@ impl Mode {
             _ => Err(GBAError::InvalidData),
         }
     }
+}
+
+impl<'a> Cpu<'a> {
+    // pub fn new(debug: bool) -> Cpu<'a> {
+        // Cpu {
+            // register: Registers::new(),
+            // bus: Bus::new(),
+            // debug: debug,
+        // }
+    // }
 }
